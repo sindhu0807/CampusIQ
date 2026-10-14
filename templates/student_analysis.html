@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Instant Student Analysis{% endblock %}
+{% block page_heading %}Instant Student Analysis{% endblock %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <div>
+            <h3>Student Readiness Assessment</h3>
+            <p class="muted">
+                Enter academic and engagement scores from 0 to 100.
+                An account is not required for instant analysis.
+            </p>
+        </div>
+
+        <span class="badge">AI Insights</span>
+    </div>
+
+    <form method="POST" action="{{ url_for('student_analysis') }}">
+
+        <div class="form-grid">
+
+            <!-- Department -->
+            <div class="form-group">
+                <label for="department">Department</label>
+
+                <select id="department" name="department" required>
+                    <option value="Computer Science">
+                        Computer Science
+                    </option>
+
+                    <option value="Artificial Intelligence">
+                        Artificial Intelligence
+                    </option>
+
+                    <option value="Information Technology">
+                        Information Technology
+                    </option>
+
+                    <option value="Electronics">
+                        Electronics
+                    </option>
+
+                    <option value="Mechanical Engineering">
+                        Mechanical Engineering
+                    </option>
+
+                    <option value="Electrical Engineering">
+                        Electrical Engineering
+                    </option>
+                </select>
+            </div>
+
+            <!-- Academic Year -->
+            <div class="form-group">
+                <label for="year">Academic Year</label>
+
+                <select id="year" name="year" required>
+                    <option value="1">1st Year</option>
+                    <option value="2">2nd Year</option>
+                    <option value="3" selected>3rd Year</option>
+                    <option value="4">4th Year</option>
+                </select>
+            </div>
+
+            <!-- Assessment Fields -->
+            {% set fields = [
+                ('academic_score', 'Academic Score'),
+                ('attendance', 'Attendance'),
+                ('lms_activity', 'LMS Activity'),
+                ('engagement', 'Student Engagement'),
+                ('skills_score', 'Technical Skills Score'),
+                ('placement_readiness', 'Placement Readiness')
+            ] %}
+
+            {% for field, label_text in fields %}
+            <div class="form-group">
+
+                <label for="{{ field }}">
+                    {{ label_text }} (%)
+                </label>
+
+                <input
+                    type="number"
+                    id="{{ field }}"
+                    name="{{ field }}"
+                    min="0"
+                    max="100"
+                    step="0.1"
+                    placeholder="Enter score (0–100)"
+                    required
+                >
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+
+            <button type="submit" class="btn">
+                ✦ Analyze Student
+            </button>
+
+            <button type="reset" class="btn btn-secondary">
+                Clear Form
+            </button>
+
+        </div>
+
+    </form>
+</div>
+
+
+<!-- Information Panel -->
+<div class="card mt-20">
+
+    <h3>How it works</h3>
+
+    <p class="muted">
+        CampusIQ calculates a weighted readiness score using the
+        configured scoring function and identifies potential academic
+        and placement support needs.
+
+        Results are indicative and should be reviewed alongside
+        individual student circumstances. They are not a guarantee
+        of future academic or placement outcomes.
+    </p>
+
+</div>
+
+{% endblock %}

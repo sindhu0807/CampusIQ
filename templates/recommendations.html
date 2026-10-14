@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Recommendations | CampusIQ{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <p class="eyebrow">AI-POWERED STUDENT SUPPORT</p>
+        <h1>Personalized Recommendations</h1>
+        <p class="page-description">
+            Actionable interventions based on student performance,
+            attendance, engagement, and placement readiness.
+        </p>
+    </div>
+</div>
+
+{% set total_recommendations = namespace(count=0) %}
+
+{% for item in recommendations %}
+    {% set total_recommendations.count =
+        total_recommendations.count + (item.actions | length)
+    %}
+{% endfor %}
+
+<!-- Summary cards -->
+<section class="stats-grid">
+
+    <article class="stat-card">
+        <p class="stat-label">Students Reviewed</p>
+        <h2>{{ recommendations | length }}</h2>
+        <p class="stat-description">Students evaluated</p>
+    </article>
+
+    <article class="stat-card">
+        <p class="stat-label">Recommended Actions</p>
+        <h2>{{ total_recommendations.count }}</h2>
+        <p class="stat-description">Suggested interventions</p>
+    </article>
+
+</section>
+
+<!-- Search -->
+<section class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Student Interventions</h2>
+            <p>Review recommendations and suggested next steps.</p>
+        </div>
+    </div>
+
+    <div class="filter-bar">
+        <input
+            type="search"
+            id="recommendationSearch"
+            class="form-control"
+            placeholder="Search by student name, ID, or department..."
+            aria-label="Search recommendations"
+        >
+    </div>
+</section>
+
+<!-- Recommendations -->
+<section class="recommendation-list">
+
+    {% for item in recommendations %}
+
+    <article
+        class="panel recommendation-student"
+        data-search="{{ (
+            item.student.name ~ ' ' ~
+            item.student.student_id ~ ' ' ~
+            item.student.department
+        ) | lower }}"
+    >
+
+        <div class="recommendation-student-header">
+
+            <div>
+                <p class="eyebrow">STUDENT {{ "%03d" | format(loop.index) }}</p>
+
+                <h2>{{ item.student.name }}</h2>
+
+                <p class="page-description">
+                    ID: {{ item.student.student_id }}
+                    · Department: {{ item.student.department }}
+                    · Year: {{ item.student.year }}
+                </p>
+            </div>
+
+            <div class="student-score">
+                <span>Performance Score</span>
+
+                <strong>
+                    {% if item.score is not none %}
+                        {{ "%.2f" | format(item.score) }}%
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </strong>
+            </div>
+
+        </div>
+
+        {% if item.actions %}
+
+        <div class="recommendation-cards">
+
+            {% for action in item.actions %}
+
+            <article class="recommendation-card">
+
+                <div class="recommendation-card-header">
+
+                    <h3>{{ action.title }}</h3>
+
+                    <span class="priority-badge priority-{{ action.priority | lower }}">
+                        {{ action.priority }} Priority
+                    </span>
+
+                </div>
+
+                <p>{{ action.description }}</p>
+
+                <div class="recommended-action">
+                    <strong>Suggested next step</strong>
+                    <p>{{ action.action }}</p>
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+            <h3>No recommendations available</h3>
+            <p>This student currently has no suggested interventions.</p>
+        </div>
+
+        {% endif %}
+
+    </article>
+
+    {% else %}
+
+    <div class="panel empty-state">
+        <h2>No student recommendations yet</h2>
+        <p>Import student records to generate personalized recommendations.</p>
+
+        <a href="{{ url_for('students') }}" class="btn btn-primary">
+            View Students
+        </a>
+    </div>
+
+    {% endfor %}
+
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("recommendationSearch");
+    const studentCards = document.querySelectorAll(".recommendation-student");
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener("input", function () {
+        const query = this.value.trim().toLowerCase();
+
+        studentCards.forEach(function (card) {
+            const searchableText = card.dataset.search || "";
+            card.hidden = !searchableText.includes(query);
+        });
+    });
+});
+</script>
+
+{% endblock %}

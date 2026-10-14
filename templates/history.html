@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}My Analysis History | CampusIQ{% endblock %}
+
+{% block page_heading %}My Analysis History{% endblock %}
+
+{% block content %}
+
+<section class="card">
+    <div class="card-header">
+        <div>
+            <h2>Saved Analysis History</h2>
+            <p>Review your previous student readiness analyses.</p>
+        </div>
+        <a href="{{ url_for('student_analysis') }}" class="btn btn-primary">
+            + New Analysis
+        </a>
+    </div>
+
+    {% if history %}
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>S.No.</th>
+                    <th>Department</th>
+                    <th>Year</th>
+                    <th>Academic Score</th>
+                    <th>Attendance</th>
+                    <th>Skills Score</th>
+                    <th>Readiness Score</th>
+                    <th>Saved On</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in history %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ item.department }}</td>
+                    <td>Year {{ item.year }}</td>
+
+                    <td>
+                        {{ "%.1f"|format(item.academic_score) }}%
+                    </td>
+
+                    <td>
+                        {{ "%.1f"|format(item.attendance) }}%
+                    </td>
+
+                    <td>
+                        {{ "%.1f"|format(item.skills_score) }}%
+                    </td>
+
+                    <td>
+                        <span class="badge
+                            {% if item.readiness_score >= 75 %}
+                                badge-success
+                            {% elif item.readiness_score >= 50 %}
+                                badge-warning
+                            {% else %}
+                                badge-danger
+                            {% endif %}">
+                            {{ "%.1f"|format(item.readiness_score) }}%
+                        </span>
+                    </td>
+
+                    <td>
+                        {% if item.created_at %}
+                            {{ item.created_at.strftime("%d %b %Y, %I:%M %p") }}
+                        {% else %}
+                            Not available
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+        <h3>No Saved Analyses Yet</h3>
+        <p>
+            Your saved results will appear here after you complete
+            an analysis and choose to save it.
+        </p>
+
+        <a href="{{ url_for('student_analysis') }}" class="btn btn-primary">
+            Start Your First Analysis
+        </a>
+    </div>
+
+    {% endif %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Student Segments{% endblock %}
+{% block page_heading %}Student Segments{% endblock %}
+
+{% block content %}
+<div class="content-card">
+    <h2>Segment Summary</h2>
+    <p>{{ total }} student records grouped using the current rule-based scoring and risk rules.</p>
+
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Segment</th><th>Students</th><th>Average Score</th></tr></thead>
+            <tbody>
+            {% for group in summary %}
+                <tr>
+                    <td>{{ group.name }}</td>
+                    <td>{{ group.count }}</td>
+                    <td>{{ group.average_score }}%</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="3">No student records available.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="content-card">
+    <h2>Student Membership</h2>
+    <input id="segmentSearch" type="search" placeholder="Search students or segments...">
+    <div class="table-wrapper">
+        <table id="segmentTable">
+            <thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Score</th><th>Segment</th></tr></thead>
+            <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>{{ row.student.student_id }}</td>
+                    <td>{{ row.student.name }}</td>
+                    <td>{{ row.student.department }}</td>
+                    <td>{{ row.score }}%</td>
+                    <td>{{ row.segment }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="5">No records available.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

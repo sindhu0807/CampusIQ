@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Risk Monitoring | CampusIQ{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <p class="eyebrow">SMART CAMPUS ANALYTICS</p>
+        <h1>Risk Monitoring</h1>
+        <p class="page-description">
+            Identify students who may need academic intervention
+            or placement preparation support.
+        </p>
+    </div>
+</div>
+
+<!-- Risk Summary -->
+<section class="stats-grid">
+
+    <article class="stat-card">
+        <p class="stat-label">Total Students</p>
+        <h2>{{ total_students | default(rows | length) }}</h2>
+        <p class="stat-description">Student records monitored</p>
+    </article>
+
+    <article class="stat-card">
+        <p class="stat-label">Students at Risk</p>
+        <h2>{{ at_risk_count | default(rows | length) }}</h2>
+        <p class="stat-description">Require attention</p>
+    </article>
+
+    <article class="stat-card">
+        <p class="stat-label">Academic Risk</p>
+        <h2>
+            {{ rows | selectattr('flags.academic_risk') | list | length }}
+        </h2>
+        <p class="stat-description">Academic performance concerns</p>
+    </article>
+
+    <article class="stat-card">
+        <p class="stat-label">Placement Risk</p>
+        <h2>
+            {{ rows | selectattr('flags.placement_risk') | list | length }}
+        </h2>
+        <p class="stat-description">Placement readiness concerns</p>
+    </article>
+
+</section>
+
+<!-- Risk Table -->
+<section class="panel">
+
+    <div class="panel-header">
+        <div>
+            <h2>Students Requiring Attention</h2>
+            <p>
+                Review individual risk scores, contributing factors,
+                and recommended interventions.
+            </p>
+        </div>
+    </div>
+
+    {% if rows %}
+
+    <div class="table-container">
+        <table class="data-table">
+
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Year</th>
+                    <th>Performance</th>
+                    <th>Risk Score</th>
+                    <th>Risk Level</th>
+                    <th>Risk Factors</th>
+                    <th>Profile</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for row in rows %}
+
+                <tr>
+                    <td>
+                        {{ row.student.student_id }}
+                    </td>
+
+                    <td>
+                        <strong>{{ row.student.name }}</strong>
+                    </td>
+
+                    <td>
+                        {{ row.student.department }}
+                    </td>
+
+                    <td>
+                        {{ row.student.year }}
+                    </td>
+
+                    <td>
+                        {% if row.score is not none %}
+                            {{ "%.1f" | format(row.score) }}%
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{ "%.1f" | format(row.flags.risk_score | default(0)) }}%
+                    </td>
+
+                    <td>
+                        <span class="risk-badge risk-{{ row.flags.risk_level | lower }}">
+                            {{ row.flags.risk_level }}
+                        </span>
+                    </td>
+
+                    <td>
+                        {% set factors =
+                            row.flags.academic_reasons
+                            + row.flags.placement_reasons
+                        %}
+
+                        {% if factors %}
+                            <ul class="risk-factor-list">
+                                {% for factor in factors %}
+                                    <li>{{ factor }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span class="muted">No specific factors</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a
+                            href="{{ url_for('student_detail', student_id=row.student.id) }}"
+                            class="btn btn-secondary"
+                        >
+                            View Profile
+                        </a>
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+    </div>
+
+    {% else %}
+
+    <div class="empty-state">
+        <h3>No students flagged for risk</h3>
+        <p>
+            No students currently meet the configured risk criteria.
+        </p>
+        <a href="{{ url_for('students') }}" class="btn btn-primary">
+            View Students
+        </a>
+    </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}Student Profile | CampusIQ{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <p class="eyebrow">STUDENT INTELLIGENCE</p>
+        <h1>{{ student.name }}</h1>
+        <p class="page-description">
+            Student ID: {{ student.student_id }}
+            · {{ student.department }}
+            · Year {{ student.year }}
+        </p>
+    </div>
+
+    <a href="{{ url_for('students') }}" class="btn btn-secondary">
+        ← Back to Students
+    </a>
+</div>
+
+<!-- Student overview -->
+<section class="stats-grid">
+
+    <article class="stat-card">
+        <p class="stat-label">Performance Score</p>
+        <h2>
+            {% if score is not none %}
+                {{ "%.2f"|format(score) }}%
+            {% else %}
+                N/A
+            {% endif %}
+        </h2>
+        <p class="stat-description">Overall weighted score</p>
+    </article>
+
+    <article class="stat-card">
+        <p class="stat-label">Risk Level</p>
+        <h2>
+            {{ flags.get('risk_level', 'Unknown') }}
+        </h2>
+        <p class="stat-description">
+            Risk score: {{ flags.get('risk_score', 0) }}%
+        </p>
+    </article>
+
+    <article class="stat-card">
+        <p class="stat-label">Student Segment</p>
+        <h2>{{ segment }}</h2>
+        <p class="stat-description">Current performance category</p>
+    </article>
+
+    <article class="stat-card">
+        <p class="stat-label">Placement Risk</p>
+        <h2>
+            {{ 'Yes' if flags.get('placement_risk') else 'No' }}
+        </h2>
+        <p class="stat-description">Placement readiness assessment</p>
+    </article>
+
+</section>
+
+<!-- Academic information -->
+<section class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Student Information</h2>
+            <p>Academic and engagement indicators.</p>
+        </div>
+    </div>
+
+    <div class="profile-grid">
+
+        <div class="profile-item">
+            <span>Student ID</span>
+            <strong>{{ student.student_id }}</strong>
+        </div>
+
+        <div class="profile-item">
+            <span>Department</span>
+            <strong>{{ student.department }}</strong>
+        </div>
+
+        <div class="profile-item">
+            <span>Academic Year</span>
+            <strong>{{ student.year }}</strong>
+        </div>
+
+        <div class="profile-item">
+            <span>Attendance</span>
+            <strong>{{ student.attendance | default(0) }}%</strong>
+        </div>
+
+        <div class="profile-item">
+            <span>Academic Score</span>
+            <strong>
+                {{ student.academic_score | default(0) }}%
+            </strong>
+        </div>
+
+        <div class="profile-item">
+            <span>LMS Activity</span>
+            <strong>{{ student.lms_activity | default(0) }}%</strong>
+        </div>
+
+        <div class="profile-item">
+            <span>Engagement</span>
+            <strong>
+                {{ student.engagement_score | default(0) }}%
+            </strong>
+        </div>
+
+        <div class="profile-item">
+            <span>Technical Skills</span>
+            <strong>{{ student.skills_score | default(0) }}%</strong>
+        </div>
+
+        <div class="profile-item">
+            <span>Placement Readiness</span>
+            <strong>
+                {{ student.placement_readiness | default(0) }}%
+            </strong>
+        </div>
+
+    </div>
+</section>
+
+<!-- Risk factors -->
+<section class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Risk Assessment</h2>
+            <p>Indicators that may require intervention.</p>
+        </div>
+    </div>
+
+    {% set academic_reasons = flags.get('academic_reasons', []) %}
+    {% set placement_reasons = flags.get('placement_reasons', []) %}
+    {% set all_reasons = academic_reasons + placement_reasons %}
+
+    {% if all_reasons %}
+
+        <ul class="profile-risk-list">
+            {% for reason in all_reasons %}
+                <li>{{ reason }}</li>
+            {% endfor %}
+        </ul>
+
+    {% else %}
+
+        <p>No risk factors were identified by the current rules.</p>
+
+    {% endif %}
+</section>
+
+<!-- Score breakdown -->
+<section class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Performance Breakdown</h2>
+            <p>Details returned by the performance scoring module.</p>
+        </div>
+    </div>
+
+    {% if breakdown %}
+
+        <div class="breakdown-list">
+
+            {% for key, value in breakdown.items() %}
+
+                <div class="breakdown-item">
+                    <span>{{ key | replace('_', ' ') | title }}</span>
+
+                    <strong>
+                        {% if value is number %}
+                            {{ "%.2f"|format(value) }}
+                        {% else %}
+                            {{ value }}
+                        {% endif %}
+                    </strong>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p>No score breakdown is available.</p>
+
+    {% endif %}
+</section>
+
+<!-- Recommendations -->
+<section class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Recommended Actions</h2>
+            <p>Suggested ways to support this student.</p>
+        </div>
+    </div>
+
+    {% if actions %}
+
+        <div class="recommendation-cards">
+
+            {% for action in actions %}
+
+                <article class="recommendation-card">
+
+                    <div class="recommendation-card-header">
+                        <h3>{{ action.title }}</h3>
+
+                        <span class="priority-badge priority-{{ action.priority | lower }}">
+                            {{ action.priority }} Priority
+                        </span>
+                    </div>
+
+                    <p>{{ action.description }}</p>
+
+                    <div class="recommended-action">
+                        <strong>Suggested next step</strong>
+                        <p>{{ action.action }}</p>
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <p>No recommendations are available for this student.</p>
+
+    {% endif %}
+</section>
+
+<!-- Analysis explanation -->
+<section class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>AI Analysis</h2>
+            <p>Analysis and explanation generated by CampusIQ.</p>
+        </div>
+    </div>
+
+    {% if explanation is mapping %}
+
+        {% for key, value in explanation.items() %}
+
+            <div class="breakdown-item">
+                <strong>{{ key | replace('_', ' ') | title }}</strong>
+
+                <p>
+                    {% if value is string %}
+                        {{ value }}
+                    {% else %}
+                        {{ value | tojson }}
+                    {% endif %}
+                </p>
+            </div>
+
+        {% endfor %}
+
+    {% elif explanation %}
+
+        <p>{{ explanation }}</p>
+
+    {% else %}
+
+        <p>No analysis explanation is available.</p>
+
+    {% endif %}
+
+    {% if analysis %}
+
+        <h3>Analysis Details</h3>
+
+        {% if analysis is mapping %}
+
+            {% for key, value in analysis.items() %}
+
+                <div class="breakdown-item">
+                    <strong>{{ key | replace('_', ' ') | title }}</strong>
+                    <p>
+                        {% if value is string %}
+                            {{ value }}
+                        {% else %}
+                            {{ value | tojson }}
+                        {% endif %}
+                    </p>
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>{{ analysis }}</p>
+
+        {% endif %}
+
+    {% endif %}
+</section>
+
+{% endblock %}

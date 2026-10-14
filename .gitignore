@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.venv-1/
+.pytest_cache/
+
+# Environment secrets
+.env
+.env.*
+
+# Allow the example environment file
+!.env.example
+
+# Local databases and backups
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# Editor files
+.vscode/
+.idea/

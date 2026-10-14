@@ -1,0 +1,121 @@
+student_id,name,department,year
+STU0001,Student 001,Computer Science,2
+STU0002,Student 002,Civil,3
+STU0003,Student 003,Mechanical,3
+STU0004,Student 004,Electronics,2
+STU0005,Student 005,Electronics,4
+STU0006,Student 006,Civil,3
+STU0007,Student 007,Computer Science,1
+STU0008,Student 008,Mechanical,4
+STU0009,Student 009,Computer Science,3
+STU0010,Student 010,Computer Science,3
+STU0011,Student 011,Mechanical,3
+STU0012,Student 012,Civil,3
+STU0013,Student 013,Mechanical,1
+STU0014,Student 014,Civil,3
+STU0015,Student 015,Mechanical,4
+STU0016,Student 016,Civil,2
+STU0017,Student 017,Mechanical,3
+STU0018,Student 018,Computer Science,1
+STU0019,Student 019,Civil,2
+STU0020,Student 020,Electronics,2
+STU0021,Student 021,Mechanical,4
+STU0022,Student 022,Electronics,1
+STU0023,Student 023,Computer Science,2
+STU0024,Student 024,Civil,2
+STU0025,Student 025,Civil,4
+STU0026,Student 026,Mechanical,4
+STU0027,Student 027,Electronics,1
+STU0028,Student 028,Civil,1
+STU0029,Student 029,Mechanical,4
+STU0030,Student 030,Electronics,1
+STU0031,Student 031,Electronics,4
+STU0032,Student 032,Computer Science,2
+STU0033,Student 033,Computer Science,4
+STU0034,Student 034,Mechanical,2
+STU0035,Student 035,Civil,2
+STU0036,Student 036,Computer Science,3
+STU0037,Student 037,Civil,1
+STU0038,Student 038,Civil,3
+STU0039,Student 039,Electronics,3
+STU0040,Student 040,Mechanical,4
+STU0041,Student 041,Computer Science,4
+STU0042,Student 042,Civil,3
+STU0043,Student 043,Mechanical,2
+STU0044,Student 044,Electronics,2
+STU0045,Student 045,Computer Science,2
+STU0046,Student 046,Civil,4
+STU0047,Student 047,Electronics,2
+STU0048,Student 048,Civil,1
+STU0049,Student 049,Mechanical,2
+STU0050,Student 050,Civil,1
+STU0051,Student 051,Civil,1
+STU0052,Student 052,Computer Science,1
+STU0053,Student 053,Electronics,4
+STU0054,Student 054,Electronics,3
+STU0055,Student 055,Electronics,3
+STU0056,Student 056,Computer Science,2
+STU0057,Student 057,Mechanical,3
+STU0058,Student 058,Computer Science,1
+STU0059,Student 059,Mechanical,4
+STU0060,Student 060,Mechanical,3
+STU0061,Student 061,Civil,4
+STU0062,Student 062,Mechanical,1
+STU0063,Student 063,Electronics,2
+STU0064,Student 064,Civil,3
+STU0065,Student 065,Electronics,2
+STU0066,Student 066,Electronics,2
+STU0067,Student 067,Civil,1
+STU0068,Student 068,Electronics,2
+STU0069,Student 069,Computer Science,1
+STU0070,Student 070,Electronics,2
+STU0071,Student 071,Civil,3
+STU0072,Student 072,Computer Science,3
+STU0073,Student 073,Electronics,3
+STU0074,Student 074,Computer Science,2
+STU0075,Student 075,Mechanical,4
+STU0076,Student 076,Electronics,1
+STU0077,Student 077,Electronics,2
+STU0078,Student 078,Computer Science,1
+STU0079,Student 079,Mechanical,2
+STU0080,Student 080,Mechanical,4
+STU0081,Student 081,Civil,2
+STU0082,Student 082,Electronics,4
+STU0083,Student 083,Computer Science,2
+STU0084,Student 084,Civil,3
+STU0085,Student 085,Mechanical,2
+STU0086,Student 086,Mechanical,2
+STU0087,Student 087,Computer Science,4
+STU0088,Student 088,Electronics,4
+STU0089,Student 089,Civil,2
+STU0090,Student 090,Civil,4
+STU0091,Student 091,Electronics,2
+STU0092,Student 092,Civil,3
+STU0093,Student 093,Civil,4
+STU0094,Student 094,Electronics,2
+STU0095,Student 095,Civil,3
+STU0096,Student 096,Electronics,2
+STU0097,Student 097,Computer Science,1
+STU0098,Student 098,Mechanical,1
+STU0099,Student 099,Mechanical,2
+STU0100,Student 100,Computer Science,4
+STU0101,Student 101,Civil,1
+STU0102,Student 102,Computer Science,2
+STU0103,Student 103,Civil,3
+STU0104,Student 104,Computer Science,1
+STU0105,Student 105,Civil,3
+STU0106,Student 106,Civil,2
+STU0107,Student 107,Civil,4
+STU0108,Student 108,Mechanical,3
+STU0109,Student 109,Electronics,3
+STU0110,Student 110,Mechanical,1
+STU0111,Student 111,Electronics,2
+STU0112,Student 112,Civil,4
+STU0113,Student 113,Mechanical,1
+STU0114,Student 114,Electronics,4
+STU0115,Student 115,Mechanical,2
+STU0116,Student 116,Mechanical,3
+STU0117,Student 117,Computer Science,3
+STU0118,Student 118,Computer Science,2
+STU0119,Student 119,Computer Science,2
+STU0120,Student 120,Computer Science,3

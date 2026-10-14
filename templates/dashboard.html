@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_heading %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <div>
+        <h1>Student Success Dashboard</h1>
+        <p>Monitor academic performance, engagement and placement readiness.</p>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <p>Total Students</p>
+        <h2>{{ total }}</h2>
+        <span>Registered demo records</span>
+    </div>
+    <div class="stat-card">
+        <p>Average Success Score</p>
+        <h2>{{ avg_score }}%</h2>
+        <span>Weighted performance score</span>
+    </div>
+    <div class="stat-card">
+        <p>Academic Risk</p>
+        <h2>{{ academic_risk_count }}</h2>
+        <span>Students flagged for review</span>
+    </div>
+    <div class="stat-card">
+        <p>Placement Risk</p>
+        <h2>{{ placement_risk_count }}</h2>
+        <span>Students needing placement support</span>
+    </div>
+    <div class="stat-card">
+        <p>High Performers</p>
+        <h2>{{ high_performers }}</h2>
+        <span>Scores of 80% or above</span>
+    </div>
+</div>
+
+<div class="content-card">
+    <h2>Performance Indicators</h2>
+    <p>Average values across the available student records.</p>
+    <div style="height:300px">
+        <canvas id="performanceChart"></canvas>
+    </div>
+</div>
+
+<div class="content-card">
+    <h2>Student Overview</h2>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Success Score</th>
+                    <th>Segment</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>{{ row.student.student_id }}</td>
+                    <td>{{ row.student.name }}</td>
+                    <td>{{ row.student.department }}</td>
+                    <td>{{ row.score }}%</td>
+                    <td>{{ row.segment }}</td>
+                    <td>
+                        <a href="{{ url_for('student_detail', student_id=row.student.id) }}">View</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6">No student records found. Add demo records to get started.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const canvas = document.getElementById("performanceChart");
+    if (!canvas || typeof Chart === "undefined") return;
+
+    new Chart(canvas, {
+        type: "bar",
+        data: {
+            labels: {{ chart['labels']| tojson }},
+            datasets: [{
+                label: "Average score",
+                data: {{ chart['values'] | tojson }},
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, max: 100 }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

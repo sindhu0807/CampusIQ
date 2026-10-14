@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Student Profile{% endblock %}
+{% block page_heading %}Student Profile{% endblock %}
+
+{% block content %}
+<div class="content-card">
+    <h2>{{ student.name }}</h2>
+    <p>Student ID: {{ student.student_id }}</p>
+    <p>Department: {{ student.department }} · Year: {{ student.year }}</p>
+    <h2>Overall Success Score: {{ score }}%</h2>
+    <p>Current segment: {{ segment }}</p>
+</div>
+
+<div class="content-card">
+    <h2>Performance Breakdown</h2>
+    <div class="table-wrapper">
+        <table>
+            <thead><tr><th>Indicator</th><th>Value</th><th>Weight</th><th>Contribution</th></tr></thead>
+            <tbody>
+            {% for name, item in breakdown.items() %}
+                <tr>
+                    <td>{{ name.replace('_', ' ') | title }}</td>
+                    <td>{{ item.value }}%</td>
+                    <td>{{ (item.weight * 100) | round(0) }}%</td>
+                    <td>{{ item.contribution }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4">No performance data available.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="content-card">
+    <h2>Risk Review</h2>
+    {% if flags.academic_risk %}
+        <h3>Academic Support</h3>
+        <ul>{% for reason in flags.academic_reasons %}<li>{{ reason }}</li>{% endfor %}</ul>
+    {% endif %}
+    {% if flags.placement_risk %}
+        <h3>Placement Support</h3>
+        <ul>{% for reason in flags.placement_reasons %}<li>{{ reason }}</li>{% endfor %}</ul>
+    {% endif %}
+    {% if not flags.academic_risk and not flags.placement_risk %}
+        <p>No risk flags were triggered by the current rules.</p>
+    {% endif %}
+    <a href="{{ url_for('students_page') }}">Back to Students</a>
+</div>
+{% endblock %}

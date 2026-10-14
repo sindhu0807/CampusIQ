@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block page_heading %}Performance Analytics{% endblock %}
+
+{% block content %}
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <p>Students Analysed</p>
+        <h2>{{ count }}</h2>
+    </div>
+
+    <div class="stat-card">
+        <p>Average Score</p>
+        <h2>{{ avg_score }}%</h2>
+    </div>
+
+    <div class="stat-card">
+        <p>Academic Risk</p>
+        <h2>{{ academic_risk_count }}</h2>
+    </div>
+
+    <div class="stat-card">
+        <p>Placement Risk</p>
+        <h2>{{ placement_risk_count }}</h2>
+    </div>
+
+</div>
+
+<div class="content-card">
+    <h2>Average Performance by Indicator</h2>
+    <p>Values are calculated from the available demo records.</p>
+
+    <div style="height:350px; position:relative;">
+        <canvas id="analyticsChart"></canvas>
+    </div>
+</div>
+
+<div class="content-card">
+    <h2>Indicator Summary</h2>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Indicator</th>
+                    <th>Average</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for label in labels %}
+                <tr>
+                    <td>{{ label }}</td>
+                    <td>{{ values[loop.index0] }}%</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="2">No data available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const canvas = document.getElementById("analyticsChart");
+
+    if (!canvas || typeof Chart === "undefined") {
+        return;
+    }
+
+    const labels = {{ labels | tojson }};
+    const values = {{ values | tojson }};
+
+    new Chart(canvas, {
+        type: "bar",
+
+        data: {
+            labels: labels,
+
+            datasets: [{
+                label: "Average score (%)",
+                data: values,
+                backgroundColor: [
+                    "#356bd1",
+                    "#36b99a",
+                    "#f1b941",
+                    "#e9687c",
+                    "#8b6cda"
+                ],
+                borderRadius: 6,
+                borderWidth: 0
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function(value) {
+                            return value + "%";
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

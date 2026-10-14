@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Risk Monitoring{% endblock %}
+{% block page_heading %}Risk Monitoring{% endblock %}
+
+{% block content %}
+<div class="content-card">
+    <h2>Students Requiring Attention</h2>
+    <p>These transparent rule-based flags are intended to support review, not make final decisions about students.</p>
+
+    <input id="riskSearch" type="search" placeholder="Search flagged students...">
+
+    <div class="table-wrapper">
+        <table id="riskTable">
+            <thead>
+                <tr><th>ID</th><th>Name</th><th>Department</th><th>Score</th><th>Risk Flags</th><th>Reasons</th><th>Profile</th></tr>
+            </thead>
+            <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>{{ row.student.student_id }}</td>
+                    <td>{{ row.student.name }}</td>
+                    <td>{{ row.student.department }}</td>
+                    <td>{{ row.score }}%</td>
+                    <td>
+                        {% if row.flags.academic_risk %}Academic {% endif %}
+                        {% if row.flags.placement_risk %}Placement{% endif %}
+                    </td>
+                    <td>
+                        {% for reason in row.reasons %}
+                            <div>{{ reason }}</div>
+                        {% endfor %}
+                    </td>
+                    <td><a href="{{ url_for('student_detail', student_id=row.student.id) }}">View</a></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="7">No students are currently flagged by these rules.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <p id="noRiskFound" hidden>No matching records found.</p>
+    </div>
+</div>
+{% endblock %}

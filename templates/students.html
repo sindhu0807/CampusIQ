@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+{% block page_heading %}Students{% endblock %}
+
+{% block content %}
+<div class="content-card">
+    <h2>Student Directory</h2>
+    <p>Search the available student records by name, ID or department.</p>
+
+    <div class="filter-row">
+        <input id="studentSearch" type="search" placeholder="Search students...">
+        <select id="departmentFilter">
+            <option value="">All departments</option>
+            {% for department in rows | map(attribute='student.department') | unique | sort %}
+            <option value="{{ department | lower }}">{{ department }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="table-wrapper">
+        <table id="studentsTable">
+            <thead>
+                <tr>
+                    <th>Student ID</th><th>Name</th><th>Department</th>
+                    <th>Year</th><th>Score</th><th>Segment</th><th>Profile</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for row in rows %}
+                <tr data-department="{{ row.student.department | lower }}">
+                    <td>{{ row.student.student_id }}</td>
+                    <td>{{ row.student.name }}</td>
+                    <td>{{ row.student.department }}</td>
+                    <td>{{ row.student.year }}</td>
+                    <td>{{ row.score }}%</td>
+                    <td>{{ row.segment }}</td>
+                    <td><a href="{{ url_for('student_detail', student_id=row.student.id) }}">View profile</a></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="7">No student records found.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <p id="noStudentsFound" hidden>No matching students found.</p>
+    </div>
+</div>
+{% endblock %}
