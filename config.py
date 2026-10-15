@@ -27,6 +27,7 @@ class Config:
             )
 
         SQLALCHEMY_DATABASE_URI = database_url
+
     else:
         SQLALCHEMY_DATABASE_URI = (
             f"sqlite:///{BASE_DIR / 'campusiq.db'}"
