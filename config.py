@@ -10,29 +10,31 @@ class Config:
         "local-only-change-this-secret"
     )
 
-    database_url = os.getenv("DATABASE_URL")
+        # Support common Neon and Vercel PostgreSQL variable names.
+    database_url = (
+        os.getenv("DATABASE_URL")
+        or os.getenv("POSTGRES_URL")
+        or os.getenv("POSTGRES_PRISMA_URL")
+        or os.getenv("NEON_DATABASE_URL")
+    )
 
     if database_url:
         if database_url.startswith("postgres://"):
             database_url = database_url.replace(
-                "postgres://",
-                "postgresql+psycopg://",
-                1
+                "postgres://", "postgresql+psycopg://", 1
             )
         elif database_url.startswith("postgresql://"):
             database_url = database_url.replace(
-                "postgresql://",
-                "postgresql+psycopg://",
-                1
+                "postgresql://", "postgresql+psycopg://", 1
             )
 
         SQLALCHEMY_DATABASE_URI = database_url
-
     else:
-        if os.getenv("VERCEL") == "1":
-            raise RuntimeError(
-               "DATABASE_URL is missing in the Vercel environment."
-            )
+        raise RuntimeError(
+            "No PostgreSQL connection variable is available. "
+            "Check DATABASE_URL, POSTGRES_URL, "
+            "POSTGRES_PRISMA_URL, and NEON_DATABASE_URL."
+        )
 
         SQLALCHEMY_DATABASE_URI = (
             f"sqlite:///{BASE_DIR / 'campusiq.db'}"
