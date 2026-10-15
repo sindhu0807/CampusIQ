@@ -10,10 +10,27 @@ class Config:
         "local-only-change-this-secret"
     )
 
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        "DATABASE_URL",
-        f"sqlite:///{BASE_DIR / 'campusiq.db'}"
-    )
+    database_url = os.getenv("DATABASE_URL")
+
+    if database_url:
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace(
+                "postgres://",
+                "postgresql+psycopg://",
+                1
+            )
+        elif database_url.startswith("postgresql://"):
+            database_url = database_url.replace(
+                "postgresql://",
+                "postgresql+psycopg://",
+                1
+            )
+
+        SQLALCHEMY_DATABASE_URI = database_url
+    else:
+        SQLALCHEMY_DATABASE_URI = (
+            f"sqlite:///{BASE_DIR / 'campusiq.db'}"
+        )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -23,3 +40,6 @@ class Config:
 
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
+    SESSION_COOKIE_SECURE = (
+        os.getenv("VERCEL") == "1"
+    )
