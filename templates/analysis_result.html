@@ -64,10 +64,52 @@
         </ul>
     </div>
 </div>
-
 <div class="card mt-20">
     <h3>Score Breakdown</h3>
 
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Metric</th>
+                    <th>Score</th>
+                    <th>Weight</th>
+                    <th>Contribution</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for field, item in breakdown.items() %}
+                <tr>
+                    <td>{{ field.replace('_', ' ') | title }}</td>
+                    <td>
+                        {% if item is mapping %}
+                            {{ item.get('value', '—') }}
+                        {% elif item is number %}
+                            {{ item }}%
+                        {% else %}
+                            {{ item }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item is mapping and item.weight is defined %}
+                            {{ (item.weight * 100) | round(0) }}%
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item is mapping and item.contribution is defined %}
+                            {{ item.contribution }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
     <div class="table-container">
         <table>
             <thead>
