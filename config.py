@@ -29,6 +29,11 @@ class Config:
         SQLALCHEMY_DATABASE_URI = database_url
 
     else:
+        if os.getenv("VERCEL") == "1":
+            raise RuntimeError(
+               "DATABASE_URL is missing in the Vercel environment."
+            )
+
         SQLALCHEMY_DATABASE_URI = (
             f"sqlite:///{BASE_DIR / 'campusiq.db'}"
         )
