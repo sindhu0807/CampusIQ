@@ -1171,7 +1171,7 @@ def logout():
         "success",
     )
 
-    return redirect(url_for("dashboard"))
+    return redirect(url_for("login"))
 
 
 # ==================================================
