@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
 {% block title %}Analysis Results{% endblock %}
+
 {% block page_heading %}Student Analysis Results{% endblock %}
 
 {% block content %}
+
+<!-- Readiness Analysis -->
 <div class="card">
     <div class="card-header">
         <div>
@@ -12,58 +15,81 @@
                 {{ department }} · Year {{ year }}
             </p>
         </div>
+
         <span class="badge">Analysis Complete</span>
     </div>
 
     <div class="score-display">
-        <div style="text-align:center">
+        <div style="text-align: center">
             <strong>{{ score }}%</strong>
-            <span style="display:block">Readiness Score</span>
+            <span style="display: block">Readiness Score</span>
         </div>
     </div>
 
-    <p class="muted" style="text-align:center">
+    <p class="muted" style="text-align: center">
         This score is an indicative assessment based on the submitted data,
         not a guarantee of placement or academic outcomes.
     </p>
 </div>
 
+<!-- Risk Indicators and Recommended Actions -->
 <div class="dashboard-grid">
+
     <div class="card">
         <h3>Risk Indicators</h3>
 
         {% if flags.academic_risk %}
-            <p><span class="badge danger">Academic Risk</span></p>
+            <p>
+                <span class="badge danger">Academic Risk</span>
+            </p>
+
             <ul class="recommendation-list">
                 {% for reason in flags.academic_reasons %}
                     <li>{{ reason }}</li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p><span class="badge success">No Academic Risk Flag</span></p>
+            <p>
+                <span class="badge success">
+                    No Academic Risk Flag
+                </span>
+            </p>
         {% endif %}
 
         {% if flags.placement_risk %}
-            <p><span class="badge danger">Placement Preparation Risk</span></p>
+            <p>
+                <span class="badge danger">
+                    Placement Preparation Risk
+                </span>
+            </p>
+
             <ul class="recommendation-list">
                 {% for reason in flags.placement_reasons %}
                     <li>{{ reason }}</li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p><span class="badge success">No Placement Risk Flag</span></p>
+            <p>
+                <span class="badge success">
+                    No Placement Risk Flag
+                </span>
+            </p>
         {% endif %}
     </div>
 
     <div class="card">
         <h3>Recommended Actions</h3>
+
         <ul class="recommendation-list">
             {% for action in actions %}
                 <li>{{ action }}</li>
             {% endfor %}
         </ul>
     </div>
+
 </div>
+
+<!-- Score Breakdown -->
 <div class="card mt-20">
     <h3>Score Breakdown</h3>
 
@@ -77,19 +103,36 @@
                     <th>Contribution</th>
                 </tr>
             </thead>
+
             <tbody>
                 {% for field, item in breakdown.items() %}
                 <tr>
-                    <td>{{ field.replace('_', ' ') | title }}</td>
+
+                    <td>
+                        {{ field.replace('_', ' ') | title }}
+                    </td>
+
+                    <!-- Score -->
                     <td>
                         {% if item is mapping %}
-                            {{ item.get('value', '—') }}
+
+                            {% if item.value is defined %}
+                                {{ item.value }}
+                                {% if item.value is number %}%
+                                {% endif %}
+                            {% else %}
+                                —
+                            {% endif %}
+
                         {% elif item is number %}
                             {{ item }}%
+
                         {% else %}
                             {{ item }}
                         {% endif %}
                     </td>
+
+                    <!-- Weight -->
                     <td>
                         {% if item is mapping and item.weight is defined %}
                             {{ (item.weight * 100) | round(0) }}%
@@ -97,6 +140,8 @@
                             —
                         {% endif %}
                     </td>
+
+                    <!-- Contribution -->
                     <td>
                         {% if item is mapping and item.contribution is defined %}
                             {{ item.contribution }}
@@ -104,35 +149,7 @@
                             —
                         {% endif %}
                     </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Metric</th>
-                    <th>Score</th>
-                    <th>Weight</th>
-                    <th>Contribution</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for field, item in breakdown.items() %}
-                <tr>
-                    <td>{{ field.replace('_', ' ') | title }}</td>
-                    <td>
-                        {% if item.value is number %}
-                            {{ item.value }}%
-                        {% else %}
-                            {{ item.value }}
-                        {% endif %}
-                    </td>
-                    <td>{{ (item.weight * 100) | round(0) }}%</td>
-                    <td>{{ item.contribution }}</td>
+
                 </tr>
                 {% endfor %}
             </tbody>
@@ -140,36 +157,61 @@
     </div>
 </div>
 
+<!-- Save Analysis -->
 <div class="card mt-20">
     <h3>Save Your Analysis</h3>
 
     {% if session.get('user_id') %}
+
         <p class="muted">
             Save these results to your account so you can revisit them later.
         </p>
 
         <form method="POST" action="{{ url_for('student_analysis') }}">
-            <input type="hidden" name="department" value="{{ department }}">
-            <input type="hidden" name="year" value="{{ year }}">
+
+            <input
+                type="hidden"
+                name="department"
+                value="{{ department }}"
+            >
+
+            <input
+                type="hidden"
+                name="year"
+                value="{{ year }}"
+            >
 
             {% for field, value in data.items() %}
-                <input type="hidden" name="{{ field }}" value="{{ value }}">
+                <input
+                    type="hidden"
+                    name="{{ field }}"
+                    value="{{ value }}"
+                >
             {% endfor %}
 
-            <input type="hidden" name="save_result" value="yes">
+            <input
+                type="hidden"
+                name="save_result"
+                value="yes"
+            >
 
             <button type="submit" class="btn btn-teal">
                 Save to My History
             </button>
+
         </form>
 
         <div class="form-actions">
-            <a class="btn btn-secondary"
-               href="{{ url_for('analysis_history') }}">
+            <a
+                class="btn btn-secondary"
+                href="{{ url_for('analysis_history') }}"
+            >
                 View Saved History
             </a>
         </div>
+
     {% else %}
+
         <p class="muted">
             Your analysis is available now. To save it for later,
             create an account or log in.
@@ -179,17 +221,23 @@
             <a class="btn" href="{{ url_for('register') }}">
                 Create Account
             </a>
+
             <a class="btn btn-secondary" href="{{ url_for('login') }}">
                 Log In
             </a>
         </div>
+
     {% endif %}
 
     <div class="form-actions">
-        <a class="btn btn-secondary"
-           href="{{ url_for('student_analysis') }}">
+        <a
+            class="btn btn-secondary"
+            href="{{ url_for('student_analysis') }}"
+        >
             Analyze Another Student
         </a>
     </div>
+
 </div>
+
 {% endblock %}
